@@ -1,0 +1,39 @@
+<html>
+    <head>
+        <title>Omi Online</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src='/_ah/channel/jsapi'></script>
+        <link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
+    </head>
+    <body>
+        <script src="js/jquery-1.9.1.min.js"></script>
+        <script src="js/bootstrap.min.js"></script>
+        <div class="hero-unit">
+            <h1>Hello...!</h1>
+            <p>Our beloved card game has gone online</p>
+        </div>
+        <div class="row">
+            <div class="span6 text-center">
+                <p class="lead muted">Create a game.<br>
+                Ask your buddies to join it.</p>
+                <form action='/create' method="post">
+                <input type="submit" value="Create" class="btn btn-primary btn-large">
+                </form>
+                <p class="muted">Actually anyone can join.</p>
+            </div>  
+            <div id='initial' class="span6 text-center">
+                <p class="lead muted">You can join following games created by others</p>
+                {% for creator,url in game_urls %}
+                    <form action={{url}} method="post">
+                        <div><input type="submit" value={{creator}} class="btn btn-primary"></div>
+                    </form>   
+                {% endfor %}
+            </div>
+        </div> 
+    <div class="footer">    
+        <a href="{{ url }}">Logout</a>
+    </div> 
+       
+    </body>
+</html>
+ 

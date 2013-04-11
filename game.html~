@@ -1,0 +1,204 @@
+<html>
+  <head>
+    <script src='/_ah/channel/jsapi'></script>
+    <link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
+  </head>
+  <body>
+    <script src="js/jquery-1.9.1.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script>
+        var state = {
+            game_key: '{{ game_key }}',
+            me: '{{ me }}',
+            id: '{{id}}',
+            turn: false
+        };
+        
+        var hand = [];
+        var cur = 'o';    
+        sendMessage = function(path, opt_param, opt_param2) {
+            
+            path += '?g=' + state.game_key;
+            if (opt_param) {
+                path += '&' + opt_param;
+            }
+            if (opt_param2) {
+                path += '&' + opt_param2;
+            }
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', path, true);
+            xhr.send();
+        };
+        
+        makeClickCallback = function(elementName,id,han){
+            
+            return function(){
+                var index = hand.indexOf(elementName);
+                hand.splice(index, 1);
+                if(!state.turn)
+                    return;
+                if(cur!='o'){
+                    alert(cur);
+                    if(elementName.charAt(0)!=cur)
+                        return;
+                }
+                sendMessage('plcrd','c='+elementName, 'i='+state.id);
+                document.getElementById(id).style.display = "none"
+                return false; 
+            }
+        };
+
+        onOpened = function() {
+            sendMessage('/resp');
+        };
+        
+        onMessage = function(m) {
+            gm = JSON.parse(m.data);
+            switch(gm.type)
+            {
+                case "message":
+                    document.getElementById('mes').innerHTML =  gm.text;
+                    break;
+                case "playedcard":
+                    if(gm.num==1){
+                        document.getElementById("t1").style.display = "none";
+                        document.getElementById("t2").style.display = "none";
+                        document.getElementById("t3").style.display = "none";
+                        document.getElementById("t4").style.display = "none";
+                        cur = gm.card.charAt(0)
+                    }
+                    if(gm.num==4){
+                        cur = 'o';
+                        alert(cur);
+                    }
+                    tsrc = "t"+gm.num;
+                    state.turn=false;
+                    if(state.id==gm.next){
+                        state.turn = true;
+                    }
+                    document.getElementById(tsrc).src = "/images/"+gm.card+".png";
+                    document.getElementById(tsrc).style.display = "inline";
+                    break;
+                case "firstfour":
+                    document.getElementById("t1").style.display = "none";
+                    document.getElementById("t2").style.display = "none";
+                    document.getElementById("t3").style.display = "none";
+                    document.getElementById("t4").style.display = "none";
+                    document.getElementById("c1").style.display = "none";
+                    document.getElementById("c2").style.display = "none";
+                    document.getElementById("c3").style.display = "none";
+                    document.getElementById("c4").style.display = "none";
+                    document.getElementById("c5").style.display = "none";
+                    document.getElementById("c6").style.display = "none";
+                    document.getElementById("c7").style.display = "none";
+                    document.getElementById("c8").style.display = "none";
+                    
+                    for( i=0 ; i<=3 ; i++)
+                        {
+                            if(gm.trumps)
+                            {
+                                document.getElementById('trumps').style.display = "block"
+                            }
+                            src = "c"+(i+1);
+                            document.getElementById(src).src = "/images/"+gm.hand[i]+".png";
+                            document.getElementById(src).style.display = "inline"
+                            document.getElementById(src).name = gm.hand[i];
+                        } 
+                        break;
+                case "wholehand":
+                      hand = gm.hand;  
+                      if(gm.trumps)
+                      {
+                           document.getElementById('trumps').style.display = "none";
+                           state.turn = true;
+                      }
+                      for( i=0 ; i<=7 ; i++)
+                      {
+                           src = "c"+(i+1);
+                           var aa = [4,5,6];
+                           document.getElementById(src).src = "/images/"+gm.hand[i]+".png";
+                           document.getElementById(src).style.display = "inline";
+                           $(document).on('click','#'+src,makeClickCallback(gm.hand[i],src,aa));
+                           
+                      } 
+                      break;      
+                default:
+            }      
+        };
+        
+        
+        
+        onError = function() {
+        };
+        
+        onClose = function() {
+        };
+        
+        channel = new goog.appengine.Channel('{{ token }}');
+        socket = channel.open();
+        socket.onopen = onOpened;
+        socket.onmessage = onMessage;
+        socket.onerror = onError;
+        socket.onclose = onClose;
+        
+        
+    </script>
+    <div class="row">
+        <div id="output" class="span10 offset1">
+            <br>
+            <p class="text-info">{{message}}</p>
+            <p id='mes' class="text-info lead"></p>
+        </div>
+    </div>    
+    
+    <div id="table" class="span12 text-center well">
+        <a id="ta1" href="#" >
+        <img id="t1" name="myImage" src="/images/empty.png" style="Display:None"/>
+        </a>
+        <a id="ta2" href="#" >
+        <img id="t2" name="myImage" src="/images/empty.png" style="Display:None"/>
+        </a>
+        <a id="ta3" href="#" >
+        <img id="t3" name="myImage" src="/images/empty.png" style="Display:None"/>
+        </a>
+        <a id="ta4" href="#" >
+        <img id="t4" name="myImage" src="/images/empty.png" style="Display:None"/>
+        </a>
+    </div>
+    
+    <div id="hand" class="span12 text-center well">
+        <a id="a1" href="#" >
+        <img id="c1" name="myImage" src="/images/empty.png" style="Display:None"/>
+        </a>
+        <a id="a2" href="#" >
+        <img id="c2" name="myImage" src="/images/empty.png" style="Display:None"/>
+        </a>
+        <a id="a3" href="#" >
+        <img id="c3" name="myImage" src="/images/empty.png" style="Display:None"/>
+        </a>
+        <a id="a4" href="#" >
+        <img id="c4" name="myImage" src="/images/empty.png" style="Display:None"/>
+        </a>
+        <a id="a5" href="#" >
+        <img id="c5" name="myImage" src="/images/empty.png" style="Display:None"/>
+        </a>
+        <a id="a6" href="#" >
+        <img id="c6" name="myImage" src="/images/empty.png" style="Display:None"/>
+        </a>
+        <a id="a7" href="#" >
+        <img id="c7" name="myImage" src="/images/empty.png" style="Display:None"/>
+        </a>
+        <a id="a8" href="#" >
+        <img id="c8" name="myImage" src="/images/empty.png" style="Display:None"/>
+        </a>
+    </div> 
+    
+    <div id="trumps" class="span12 text-center" style="Display:None">
+        <input class="btn" type="submit" onclick="sendMessage('/tru','t=s')" value=spades>
+        <input class="btn" type="submit" onclick="sendMessage('/tru','t=c')" value=clubs>
+        <input class="btn" type="submit" onclick="sendMessage('/tru','t=h')" value=hearts>
+        <input class="btn" type="submit" onclick="sendMessage('/tru','t=d')" value=diamonds>
+    </div>    
+  </body>
+</html>
+ 
