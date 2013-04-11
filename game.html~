@@ -31,17 +31,12 @@
         };
         
         makeClickCallback = function(elementName,id,han){
-            
+            //prepares the callback for click event of the card 'id'
             return function(){
                 var index = hand.indexOf(elementName);
-                hand.splice(index, 1);
+                hand.splice(index, 1); //that card is removed from hand
                 if(!state.turn)
                     return;
-                if(cur!='o'){
-                    alert(cur);
-                    if(elementName.charAt(0)!=cur)
-                        return;
-                }
                 sendMessage('plcrd','c='+elementName, 'i='+state.id);
                 document.getElementById(id).style.display = "none"
                 return false; 
@@ -59,39 +54,49 @@
                 case "message":
                     document.getElementById('mes').innerHTML =  gm.text;
                     break;
+                    
+                    
                 case "playedcard":
                     if(gm.num==1){
                         document.getElementById("t1").style.display = "none";
                         document.getElementById("t2").style.display = "none";
                         document.getElementById("t3").style.display = "none";
                         document.getElementById("t4").style.display = "none";
-                        cur = gm.card.charAt(0)
                     }
-                    if(gm.num==4){
-                        cur = 'o';
-                        alert(cur);
-                    }
+                    
                     tsrc = "t"+gm.num;
                     state.turn=false;
                     if(state.id==gm.next){
                         state.turn = true;
                     }
+                    
                     document.getElementById(tsrc).src = "/images/"+gm.card+".png";
                     document.getElementById(tsrc).style.display = "inline";
+                    
                     break;
+                    
+                    
                 case "firstfour":
                     document.getElementById("t1").style.display = "none";
                     document.getElementById("t2").style.display = "none";
                     document.getElementById("t3").style.display = "none";
                     document.getElementById("t4").style.display = "none";
                     document.getElementById("c1").style.display = "none";
+                    $("c1").unbind('click');
                     document.getElementById("c2").style.display = "none";
+                    $("c2").unbind('click');
                     document.getElementById("c3").style.display = "none";
+                    $("c3").unbind('click');
                     document.getElementById("c4").style.display = "none";
+                    $("c4").unbind('click');
                     document.getElementById("c5").style.display = "none";
+                    $("c5").unbind('click');
                     document.getElementById("c6").style.display = "none";
+                    $("c6").unbind('click');
                     document.getElementById("c7").style.display = "none";
+                    $("c7").unbind('click');
                     document.getElementById("c8").style.display = "none";
+                    $("c8").unbind('click');
                     
                     for( i=0 ; i<=3 ; i++)
                         {
@@ -105,6 +110,8 @@
                             document.getElementById(src).name = gm.hand[i];
                         } 
                         break;
+                        
+                        
                 case "wholehand":
                       hand = gm.hand;  
                       if(gm.trumps)
@@ -118,10 +125,13 @@
                            var aa = [4,5,6];
                            document.getElementById(src).src = "/images/"+gm.hand[i]+".png";
                            document.getElementById(src).style.display = "inline";
-                           $(document).on('click','#'+src,makeClickCallback(gm.hand[i],src,aa));
+                           $('#'+src).off('click');
+                           $('#'+src).on('click',makeClickCallback(gm.hand[i],src,aa));
                            
                       } 
-                      break;      
+                      break;   
+                      
+                         
                 default:
             }      
         };
@@ -198,7 +208,8 @@
         <input class="btn" type="submit" onclick="sendMessage('/tru','t=c')" value=clubs>
         <input class="btn" type="submit" onclick="sendMessage('/tru','t=h')" value=hearts>
         <input class="btn" type="submit" onclick="sendMessage('/tru','t=d')" value=diamonds>
-    </div>    
+    </div>  
+    <a href='/'>Home</a>  
   </body>
 </html>
  

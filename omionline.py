@@ -172,6 +172,8 @@ class CardPlayer(webapp2.RequestHandler):
         channel.send_message(game.user3.user_id() + game.user1.user_id(),'%s' % msg)
         channel.send_message(game.user4.user_id() + game.user1.user_id(),'%s' % msg)        
         if game.rounds == 8:
+            game.rounds = 0
+            game.put()
             create_round(game)
             msg1,msg2,msg3,msg4 = create_init_msg(game) 
             channel.send_message(game.user1.user_id() + game.user1.user_id(),'%s' % msg1)

@@ -171,7 +171,9 @@ class CardPlayer(webapp2.RequestHandler):
         channel.send_message(game.user2.user_id() + game.user1.user_id(),'%s' % msg)
         channel.send_message(game.user3.user_id() + game.user1.user_id(),'%s' % msg)
         channel.send_message(game.user4.user_id() + game.user1.user_id(),'%s' % msg)        
-        if game.rounds == 8:
+        if game.rounds == 2:
+            game.rounds = 0
+            game.put()
             create_round(game)
             msg1,msg2,msg3,msg4 = create_init_msg(game) 
             channel.send_message(game.user1.user_id() + game.user1.user_id(),'%s' % msg1)
@@ -184,10 +186,10 @@ def inform_users():
     msgp2 = "Welcome! You are the 'Player 2'"
     msgp3 = "Welcome! You are the 'Player 3'"
     msgp4 = "Welcome! You are the 'Player 4'"
-    channel.send_message(game.user1.user_id() + game.user1.user_id(),'%s' % create_message(msgp1))
-    channel.send_message(game.user2.user_id() + game.user1.user_id(),'%s' % create_message(msgp2))
-    channel.send_message(game.user3.user_id() + game.user1.user_id(),'%s' % create_message(msgp3))
-    channel.send_message(game.user4.user_id() + game.user1.user_id(),'%s' % create_message(msgp4))
+    #channel.send_message(game.user1.user_id() + game.user1.user_id(),'%s' % create_message(msgp1))
+    #channel.send_message(game.user2.user_id() + game.user1.user_id(),'%s' % create_message(msgp2))
+    #channel.send_message(game.user3.user_id() + game.user1.user_id(),'%s' % create_message(msgp3))
+    #channel.send_message(game.user4.user_id() + game.user1.user_id(),'%s' % create_message(msgp4))
             
 def pick_winner(table):
     return 3
