@@ -212,9 +212,13 @@ def create_round(game):
     cards = ["%s_%s" %(i,j) for i in 'cdeh' for j in '12345678' ]  
     random.shuffle(cards)
     game.pack = cards
+    cards[:4].sort() 
     game.hand1 = cards[:4] 
-    game.hand2 = cards[4:8] 
+    cards[4:8].sort() 
+    game.hand2 = cards[4:8]
+    cards[8:12].sort() 
     game.hand3 = cards[8:12]
+    cards[12:16].sort()
     game.hand4 = cards[12:16] 
     i = game.starter
     game.starter = (i+1)%4 #0 base user index to represent the starter of each round  
@@ -315,22 +319,22 @@ def create_wholehand_msg(game):
     gameUpdate[0] = {
       'type': 'wholehand' , 
       'hand': game.hand1 ,  
-      'mes': "%s are selected as trumphs" % ("Spades" if game.trump == "s" else "Clubs" if game.trump == "c" else "Hearts" if  game.trump == "h" else "Diamonds")
+      'mes': "%s are selected as trumphs" % ("Spades" if game.trump == "e" else "Clubs" if game.trump == "c" else "Hearts" if  game.trump == "h" else "Diamonds")
     }
     gameUpdate[1] = {
       'type': 'wholehand' , 
       'hand': game.hand2 ,
-      'mes': "%s are selected as trumphs" % ("Spades" if game.trump == "s" else "Clubs" if game.trump == "c" else "Hearts" if  game.trump == "h" else "Diamonds")
+      'mes': "%s are selected as trumphs" % ("Spades" if game.trump == "e" else "Clubs" if game.trump == "c" else "Hearts" if  game.trump == "h" else "Diamonds")
     }
     gameUpdate[2] = {
       'type': 'wholehand' , 
       'hand': game.hand3 ,  
-      'mes': "%s are selected as trumphs" % ("Spades" if game.trump == "s" else "Clubs" if game.trump == "c" else "Hearts" if  game.trump == "h" else "Diamonds")
+      'mes': "%s are selected as trumphs" % ("Spades" if game.trump == "e" else "Clubs" if game.trump == "c" else "Hearts" if  game.trump == "h" else "Diamonds")
     }
     gameUpdate[3] = {
       'type': 'wholehand' , 
       'hand': game.hand4 , 
-      'mes': "%s are selected as trumphs" % ("Spades" if game.trump == "s" else "Clubs" if game.trump == "c" else "Hearts" if  game.trump == "h" else "Diamonds")
+      'mes': "%s are selected as trumphs" % ("Spades" if game.trump == "e" else "Clubs" if game.trump == "c" else "Hearts" if  game.trump == "h" else "Diamonds")
     }
     i = game.starter
     gu = gameUpdate[(i+1)%4]

@@ -199,7 +199,7 @@ def pick_winner(table,tru,handwinner):
         cardscore = 0;
         if c[0] == tru:
             cardscore=10+int(c[-1])
-        if c[0] == fc
+        if c[0] == fc:
             cardscore=int(c[-1])
         if cardscore>tot:
             tot=cardscore
@@ -315,22 +315,22 @@ def create_wholehand_msg(game):
     gameUpdate[0] = {
       'type': 'wholehand' , 
       'hand': game.hand1 ,  
-      'mes': "%s are selected as trumphs" % ("Spades" if game.trump == "s" else "Clubs" if game.trump == "c" else "Hearts" if  game.trump == "h" else "Diamonds")
+      'mes': "%s are selected as trumphs" % ("Spades" if game.trump == "e" else "Clubs" if game.trump == "c" else "Hearts" if  game.trump == "h" else "Diamonds")
     }
     gameUpdate[1] = {
       'type': 'wholehand' , 
       'hand': game.hand2 ,
-      'mes': "%s are selected as trumphs" % ("Spades" if game.trump == "s" else "Clubs" if game.trump == "c" else "Hearts" if  game.trump == "h" else "Diamonds")
+      'mes': "%s are selected as trumphs" % ("Spades" if game.trump == "e" else "Clubs" if game.trump == "c" else "Hearts" if  game.trump == "h" else "Diamonds")
     }
     gameUpdate[2] = {
       'type': 'wholehand' , 
       'hand': game.hand3 ,  
-      'mes': "%s are selected as trumphs" % ("Spades" if game.trump == "s" else "Clubs" if game.trump == "c" else "Hearts" if  game.trump == "h" else "Diamonds")
+      'mes': "%s are selected as trumphs" % ("Spades" if game.trump == "e" else "Clubs" if game.trump == "c" else "Hearts" if  game.trump == "h" else "Diamonds")
     }
     gameUpdate[3] = {
       'type': 'wholehand' , 
       'hand': game.hand4 , 
-      'mes': "%s are selected as trumphs" % ("Spades" if game.trump == "s" else "Clubs" if game.trump == "c" else "Hearts" if  game.trump == "h" else "Diamonds")
+      'mes': "%s are selected as trumphs" % ("Spades" if game.trump == "e" else "Clubs" if game.trump == "c" else "Hearts" if  game.trump == "h" else "Diamonds")
     }
     i = game.starter
     gu = gameUpdate[(i+1)%4]

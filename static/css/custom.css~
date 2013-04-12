@@ -1,0 +1,54 @@
+#t1{
+    position: absolute;
+    top:7%;
+    left:47%
+}
+
+#t2{
+    position: absolute;
+    top:30%;
+    left:40%
+}
+
+#t3{
+    position: absolute;
+    top:53%;
+    left:47%
+}
+
+#t4{
+    position: absolute;
+    top:30%;
+    left:54%
+}
+
+#table{
+    position:relative;
+    display:block;
+    height:210px;
+    background-color:#49a
+}
+
+#hand{
+    position:relative
+    display:block;
+    height:100px;
+    background-color:#49a
+}
+
+#messageout{
+    position:relative;
+    height:50px
+}
+
+#score{
+    position: absolute;
+    top:53%;
+    left:47%
+}
+
+#trumpinfo{
+    position: absolute;
+    top:53%;
+    left:47%
+}

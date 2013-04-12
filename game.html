@@ -2,6 +2,7 @@
   <head>
     <script src='/_ah/channel/jsapi'></script>
     <link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
+    <link href="css/custom.css" rel="stylesheet" media="screen">
   </head>
   <body>
     <script src="js/jquery-1.9.1.min.js"></script>
@@ -77,7 +78,7 @@
                     
                     
                     document.getElementById(tsrc).src = "/images/"+gm.card+".png";
-                    document.getElementById(tsrc).style.display = "inline";
+                    document.getElementById(tsrc).style.display = "block";
                     
                     break;
                     
@@ -154,41 +155,31 @@
         
         
     </script>
-    <div class="row well">
-        <div id="output" class="span12">
-            <br>
-            <p id='info' class="text-info">{{message}}</p>
-            <p id='trumpinfo' class="text-info"></p>
-            <p id='mes' class="text-info lead"></p>
-        </div>
+    <div id="messageout" class="well"> 
+        <p id='trumpinfo' class="text-info ">Trumphs</p>  
+        <p id='score' class ="text-info Lead">0 to 0</p>  
+        <p id='mes' class="text-info lead"></p>
+        <a href='/'>Home</a> 
     </div>    
     
-    <div id="table" class="span12 text-center well row" >
-        <div class="span3 text-center well" >
+    <div id="table" class="well">
             <a id="ta2" href="#" >
-            <img id="t2" name="myImage" src="/images/empty.png" style="Display:None"/>
-            </a>
-        </div>
-        <div class="span3 text-center">
-            <div class="well">
+                <img id="t2" name="myImage" src="/images/empty.png" style="Display:None"/>
+            </a>  
             <a id="ta1" href="#" >
                 <img id="t1" name="myImage" src="/images/empty.png" style="Display:None"/>
             </a>
-            </div>
-            <div class="well">
+            
             <a id="ta3" href="#" >
                 <img id="t3" name="myImage" src="/images/empty.png" style="Display:None"/>
             </a>
-            </div>
-        </div>
-        <div class="span3 text-center well">
+            
             <a id="ta4" href="#" >
                 <img id="t4" name="myImage" src="/images/empty.png" style="Display:None"/>
             </a>
-        </div>
     </div>
     
-    <div id="hand" class="span12 text-center well">
+    <div id="hand" class="text-center well">
         <a id="a1" href="#" >
         <img id="c1" name="myImage" src="/images/empty.png" style="Display:None"/>
         </a>
@@ -220,8 +211,7 @@
         <input class="btn" type="submit" onclick="sendMessage('/tru','t=c')" value=clubs>
         <input class="btn" type="submit" onclick="sendMessage('/tru','t=h')" value=hearts>
         <input class="btn" type="submit" onclick="sendMessage('/tru','t=d')" value=diamonds>
-    </div>  
-    <a href='/'>Home</a>  
+    </div> 
   </body>
 </html>
  

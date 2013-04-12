@@ -6,6 +6,7 @@
         <link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
     </head>
     <body>
+        <script src="js/jquery-1.9.1.min.js"></script>
         <script src="js/bootstrap.min.js"></script>
         <div class="hero-unit">
             <h1>Hello...!</h1>
