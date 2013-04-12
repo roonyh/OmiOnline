@@ -21,7 +21,7 @@ class OmiGame(db.Model):
     user2 = db.UserProperty()
     user3 = db.UserProperty()
     user4 = db.UserProperty()
-    trumpher = db.UserProperty()
+    handwinner = db.IntegerProperty()
     pack = db.StringListProperty()
     hand1 = db.StringListProperty()
     hand2 = db.StringListProperty()
@@ -64,17 +64,17 @@ class GameConnector(webapp2.RequestHandler):
             game.user2 = user
             game.put()
             pid = 1 #0 base
-            message ='You are the second player to join'
+            message ='Your are Player 2. '
         elif not game.user3:    
             game.user3 = user
             game.put()
             pid = 2
-            message ='You are the third player to join'
+            message ='Your are Player 3. '
         elif not game.user4:    
             game.user4 = user
             game.put()
             pid = 3
-            message ='You are the forth player to join' 
+            message ='Your are Player 4. ' 
         else:
             message = 'Game is full'
         token = channel.create_channel(user.user_id() + game.user1.user_id())
@@ -98,7 +98,7 @@ class GameCreator(webapp2.RequestHandler):
         game.starter = -1
         game.rounds = 0
         game.put()
-        message = 'A new game is created'
+        message = 'Your are Player 1. '
         token = channel.create_channel(user.user_id() + game.user1.user_id())
         url = users.create_logout_url(self.request.uri)
         template_values = {
@@ -154,23 +154,20 @@ class CardPlayer(webapp2.RequestHandler):
         game.put()
         msg = ""
         if len(table)==4:
-            winner = pick_winner(table)
+            winner = pick_winner(table,game.trump,game.handwinner)
+            game.handwinner = winner
             game.table = []
             r = game.rounds
             r = r+1
             game.rounds = r
             game.put()
-            msg = create_played_msg(card,4,int(pid),winner)
-            channel.send_message(game.user1.user_id() + game.user1.user_id(),'%s' % create_message("%d number of rounds" % r))
-            channel.send_message(game.user2.user_id() + game.user1.user_id(),'%s' % create_message("%d number of rounds" % r))
-            channel.send_message(game.user3.user_id() + game.user1.user_id(),'%s' % create_message("%d number of rounds" % r))
-            channel.send_message(game.user4.user_id() + game.user1.user_id(),'%s' % create_message("%d number of rounds" % r)) 
+            msg1,msg2,msg3,msg4 = create_played_msg(card,4,int(pid),winner)
         else:
-            msg = create_played_msg(card,len(table),int(pid),(int(pid)+1)%4)  
-        channel.send_message(game.user1.user_id() + game.user1.user_id(),'%s' % msg)
-        channel.send_message(game.user2.user_id() + game.user1.user_id(),'%s' % msg)
-        channel.send_message(game.user3.user_id() + game.user1.user_id(),'%s' % msg)
-        channel.send_message(game.user4.user_id() + game.user1.user_id(),'%s' % msg)        
+            msg1,msg2,msg3,msg4 = create_played_msg(card,len(table),int(pid),(int(pid)+1)%4)  
+        channel.send_message(game.user1.user_id() + game.user1.user_id(),'%s' % msg1)
+        channel.send_message(game.user2.user_id() + game.user1.user_id(),'%s' % msg2)
+        channel.send_message(game.user3.user_id() + game.user1.user_id(),'%s' % msg3)
+        channel.send_message(game.user4.user_id() + game.user1.user_id(),'%s' % msg4)        
         if game.rounds == 8:
             game.rounds = 0
             game.put()
@@ -191,11 +188,28 @@ def inform_users():
     #channel.send_message(game.user3.user_id() + game.user1.user_id(),'%s' % create_message(msgp3))
     #channel.send_message(game.user4.user_id() + game.user1.user_id(),'%s' % create_message(msgp4))
             
-def pick_winner(table):
-    return 3
+def pick_winner(table,tru,handwinner):
+    tot = 0
+    wincard = 0
+    i = -1
+    first = table[0]
+    fc = first[0]
+    for c in table:
+        i=i+1
+        cardscore = 0;
+        if c[0] == tru:
+            cardscore=10+int(c[-1])
+        if c[0] == fc
+            cardscore=int(c[-1])
+        if cardscore>tot:
+            tot=cardscore
+            wincard=i
+            
+    plr = (handwinner+wincard) % 4
+    return plr
                         
 def create_round(game):
-    cards = ["%s_%s" %(i,j) for i in 'scdh' for j in '789tjqka' ]  
+    cards = ["%s_%s" %(i,j) for i in 'cdeh' for j in '12345678' ]  
     random.shuffle(cards)
     game.pack = cards
     game.hand1 = cards[:4] 
@@ -203,37 +217,69 @@ def create_round(game):
     game.hand3 = cards[8:12]
     game.hand4 = cards[12:16] 
     i = game.starter
-    game.starter = (i+1)%4 #0 base user index to represent the starter of each round                    
+    game.starter = (i+1)%4 #0 base user index to represent the starter of each round  
+    game.handwinner = (i+2)%4                  
     game.put()
 
 def create_played_msg(card,num,now,next):
-    message = {
+    message = [{},{},{},{}] 
+    message[0] = {
         'type' : 'playedcard',
         'card': card,
         'num': num, #describes which card of the table out of 1,2,3,4
         'now':now,
         'next' : next,
-        'mes' : 'Card played'
-     }
-    return json.dumps(message)
+        'mes' : 'Player%d won the last hand' % (next+1)
+    }
+    message[1] = {
+        'type' : 'playedcard',
+        'card': card,
+        'num': num, #describes which card of the table out of 1,2,3,4
+        'now':now,
+        'next' : next,
+        'mes' : 'Player%d won the last hand' % (next+1)
+    }
+    message[2] = {
+        'type' : 'playedcard',
+        'card': card,
+        'num': num, #describes which card of the table out of 1,2,3,4
+        'now':now,
+        'next' : next,
+        'mes' : 'Player%d won the last hand' % (next+1)
+    }
+    message[3] = {
+        'type' : 'playedcard',
+        'card': card,
+        'num': num, #describes which card of the table out of 1,2,3,4
+        'now':now,
+        'next' : next,
+        'mes' : 'Player%d won the hand' % (next+1)
+    }
+    m = message[next]
+    m['mes'] = "You won the hand :) Click on a card to start next hand"
+    return json.dumps(message[0]),json.dumps(message[1]),json.dumps(message[2]),json.dumps(message[3]),
     
 def create_full_hand(game):
     cards = game.pack
     h1 = game.hand1
     h1.extend(cards[16:20])
+    h1.sort()
     game.hand1 = h1   
     h2 = game.hand2
     h2.extend(cards[20:24])
+    h2.sort()
     game.hand2 = h2   
     h3 = game.hand3
     h3.extend(cards[24:28])
+    h3.sort()
     game.hand3 = h3
     h4 = game.hand4
     h4.extend(cards[28:32])
+    h4.sort()
     game.hand4 = h4                  
     game.put()    
     
-def create_message(msg):   
+def create_message(msg):  
     message = {
         'type':'message',
         'text':msg

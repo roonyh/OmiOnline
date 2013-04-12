@@ -64,6 +64,10 @@
                         document.getElementById("t4").style.display = "none";
                     }
                     
+                    if(gm.num==4){
+                        document.getElementById('mes').innerHTML=gm.mes 
+                    }
+                    
                     tsrc = "t"+(((gm.now+6-state.id)%4)+1);
                     alert
                     state.turn=false;
@@ -109,10 +113,11 @@
                 case "wholehand":
                       hand = gm.hand;
                       document.getElementById('mes').innerHTML = gm.mes; 
-                      document.getElementById('info').innerHTML = document.getElementById('info').innerHTML+gm.mes;
+                      document.getElementById('trumpinfo').innerHTML = gm.mes;
                       if(gm.trumps)
                       {
                            document.getElementById('trumps').style.display = "none";
+                           document.getElementById('mes').innerHTML = gm.mes+" Your turn."; 
                            state.turn = true;
                       }
                       for( i=0 ; i<=7 ; i++)
@@ -149,10 +154,11 @@
         
         
     </script>
-    <div class="row">
-        <div id="output" class="span10 offset1">
+    <div class="row well">
+        <div id="output" class="span12">
             <br>
             <p id='info' class="text-info">{{message}}</p>
+            <p id='trumpinfo' class="text-info"></p>
             <p id='mes' class="text-info lead"></p>
         </div>
     </div>    
@@ -209,7 +215,7 @@
         </a>
     </div> 
     
-    <div id="trumps" class="span12 text-center" style="Display:None">
+    <div id="trumps" class="span12 text-center well" style="Display:None">
         <input class="btn" type="submit" onclick="sendMessage('/tru','t=s')" value=spades>
         <input class="btn" type="submit" onclick="sendMessage('/tru','t=c')" value=clubs>
         <input class="btn" type="submit" onclick="sendMessage('/tru','t=h')" value=hearts>
