@@ -64,17 +64,17 @@ class GameConnector(webapp2.RequestHandler):
             game.user2 = user
             game.put()
             pid = 1 #0 base
-            message ='You are the second player to join'
+            message ='Your are Player 2. '
         elif not game.user3:    
             game.user3 = user
             game.put()
             pid = 2
-            message ='You are the third player to join'
+            message ='Your are Player 3. '
         elif not game.user4:    
             game.user4 = user
             game.put()
             pid = 3
-            message ='You are the forth player to join' 
+            message ='Your are Player 4. ' 
         else:
             message = 'Game is full'
         token = channel.create_channel(user.user_id() + game.user1.user_id())
@@ -98,7 +98,7 @@ class GameCreator(webapp2.RequestHandler):
         game.starter = -1
         game.rounds = 0
         game.put()
-        message = 'A new game is created'
+        message = 'Your are Player 1. '
         token = channel.create_channel(user.user_id() + game.user1.user_id())
         url = users.create_logout_url(self.request.uri)
         template_values = {
@@ -160,13 +160,13 @@ class CardPlayer(webapp2.RequestHandler):
             r = r+1
             game.rounds = r
             game.put()
-            msg = create_played_msg(card,4,winner)
+            msg = create_played_msg(card,4,int(pid),winner)
             channel.send_message(game.user1.user_id() + game.user1.user_id(),'%s' % create_message("%d number of rounds" % r))
             channel.send_message(game.user2.user_id() + game.user1.user_id(),'%s' % create_message("%d number of rounds" % r))
             channel.send_message(game.user3.user_id() + game.user1.user_id(),'%s' % create_message("%d number of rounds" % r))
             channel.send_message(game.user4.user_id() + game.user1.user_id(),'%s' % create_message("%d number of rounds" % r)) 
         else:
-            msg = create_played_msg(card,len(table),(int(pid)+1)%4)  
+            msg = create_played_msg(card,len(table),int(pid),(int(pid)+1)%4)  
         channel.send_message(game.user1.user_id() + game.user1.user_id(),'%s' % msg)
         channel.send_message(game.user2.user_id() + game.user1.user_id(),'%s' % msg)
         channel.send_message(game.user3.user_id() + game.user1.user_id(),'%s' % msg)
@@ -206,12 +206,14 @@ def create_round(game):
     game.starter = (i+1)%4 #0 base user index to represent the starter of each round                    
     game.put()
 
-def create_played_msg(card,num,next):
+def create_played_msg(card,num,now,next):
     message = {
         'type' : 'playedcard',
         'card': card,
         'num': num, #describes which card of the table out of 1,2,3,4
-        'next' : next
+        'now':now,
+        'next' : next,
+        'mes' : 'Card played'
      }
     return json.dumps(message)
     
@@ -242,7 +244,8 @@ def create_init_msg(game):
     gameUpdate = [{},{},{},{}]
     gameUpdate[0] = {
       'type': 'firstfour' , 
-      'hand': game.hand1   
+      'hand': game.hand1  
+       
     }
     gameUpdate[1] = {
       'type': 'firstfour' , 
@@ -265,19 +268,23 @@ def create_wholehand_msg(game):
     gameUpdate = [{},{},{},{},{},{},{},{}]
     gameUpdate[0] = {
       'type': 'wholehand' , 
-      'hand': game.hand1   
+      'hand': game.hand1 ,  
+      'mes': "%s are selected as trumphs" % ("Spades" if game.trump == "s" else "Clubs" if game.trump == "c" else "Hearts" if  game.trump == "h" else "Diamonds")
     }
     gameUpdate[1] = {
       'type': 'wholehand' , 
-      'hand': game.hand2   
+      'hand': game.hand2 ,
+      'mes': "%s are selected as trumphs" % ("Spades" if game.trump == "s" else "Clubs" if game.trump == "c" else "Hearts" if  game.trump == "h" else "Diamonds")
     }
     gameUpdate[2] = {
       'type': 'wholehand' , 
-      'hand': game.hand3   
+      'hand': game.hand3 ,  
+      'mes': "%s are selected as trumphs" % ("Spades" if game.trump == "s" else "Clubs" if game.trump == "c" else "Hearts" if  game.trump == "h" else "Diamonds")
     }
     gameUpdate[3] = {
       'type': 'wholehand' , 
-      'hand': game.hand4   
+      'hand': game.hand4 , 
+      'mes': "%s are selected as trumphs" % ("Spades" if game.trump == "s" else "Clubs" if game.trump == "c" else "Hearts" if  game.trump == "h" else "Diamonds")
     }
     i = game.starter
     gu = gameUpdate[(i+1)%4]

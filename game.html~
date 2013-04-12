@@ -10,10 +10,10 @@
         var state = {
             game_key: '{{ game_key }}',
             me: '{{ me }}',
-            id: '{{id}}',
+            id: '{{id}}', 
             turn: false
         };
-        
+        //id is zero based
         var hand = [];
         var cur = 'o';    
         sendMessage = function(path, opt_param, opt_param2) {
@@ -64,11 +64,13 @@
                         document.getElementById("t4").style.display = "none";
                     }
                     
-                    tsrc = "t"+gm.num;
+                    tsrc = "t"+(((gm.now+6-state.id)%4)+1);
+                    alert
                     state.turn=false;
                     if(state.id==gm.next){
                         state.turn = true;
                     }
+                    
                     
                     document.getElementById(tsrc).src = "/images/"+gm.card+".png";
                     document.getElementById(tsrc).style.display = "inline";
@@ -82,21 +84,13 @@
                     document.getElementById("t3").style.display = "none";
                     document.getElementById("t4").style.display = "none";
                     document.getElementById("c1").style.display = "none";
-                    $("c1").unbind('click');
                     document.getElementById("c2").style.display = "none";
-                    $("c2").unbind('click');
                     document.getElementById("c3").style.display = "none";
-                    $("c3").unbind('click');
                     document.getElementById("c4").style.display = "none";
-                    $("c4").unbind('click');
                     document.getElementById("c5").style.display = "none";
-                    $("c5").unbind('click');
                     document.getElementById("c6").style.display = "none";
-                    $("c6").unbind('click');
                     document.getElementById("c7").style.display = "none";
-                    $("c7").unbind('click');
                     document.getElementById("c8").style.display = "none";
-                    $("c8").unbind('click');
                     
                     for( i=0 ; i<=3 ; i++)
                         {
@@ -113,7 +107,9 @@
                         
                         
                 case "wholehand":
-                      hand = gm.hand;  
+                      hand = gm.hand;
+                      document.getElementById('mes').innerHTML = gm.mes; 
+                      document.getElementById('info').innerHTML = document.getElementById('mes').innerHTML+gm.mes;
                       if(gm.trumps)
                       {
                            document.getElementById('trumps').style.display = "none";
@@ -156,24 +152,34 @@
     <div class="row">
         <div id="output" class="span10 offset1">
             <br>
-            <p class="text-info">{{message}}</p>
+            <p id='info' class="text-info">{{message}}</p>
             <p id='mes' class="text-info lead"></p>
         </div>
     </div>    
     
-    <div id="table" class="span12 text-center well">
-        <a id="ta1" href="#" >
-        <img id="t1" name="myImage" src="/images/empty.png" style="Display:None"/>
-        </a>
-        <a id="ta2" href="#" >
-        <img id="t2" name="myImage" src="/images/empty.png" style="Display:None"/>
-        </a>
-        <a id="ta3" href="#" >
-        <img id="t3" name="myImage" src="/images/empty.png" style="Display:None"/>
-        </a>
-        <a id="ta4" href="#" >
-        <img id="t4" name="myImage" src="/images/empty.png" style="Display:None"/>
-        </a>
+    <div id="table" class="span12 text-center well row" >
+        <div class="span3 text-center well" >
+            <a id="ta2" href="#" >
+            <img id="t2" name="myImage" src="/images/empty.png" style="Display:None"/>
+            </a>
+        </div>
+        <div class="span3 text-center">
+            <div class="well">
+            <a id="ta1" href="#" >
+                <img id="t1" name="myImage" src="/images/empty.png" style="Display:None"/>
+            </a>
+            </div>
+            <div class="well">
+            <a id="ta3" href="#" >
+                <img id="t3" name="myImage" src="/images/empty.png" style="Display:None"/>
+            </a>
+            </div>
+        </div>
+        <div class="span3 text-center well">
+            <a id="ta4" href="#" >
+                <img id="t4" name="myImage" src="/images/empty.png" style="Display:None"/>
+            </a>
+        </div>
     </div>
     
     <div id="hand" class="span12 text-center well">
