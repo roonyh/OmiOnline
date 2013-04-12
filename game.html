@@ -16,7 +16,7 @@
         };
         //id is zero based
         var hand = [];
-        var cur = 'o';    
+        var cur = 'und';    
         sendMessage = function(path, opt_param, opt_param2) {
             
             path += '?g=' + state.game_key;
@@ -34,12 +34,24 @@
         makeClickCallback = function(elementName,id,han){
             //prepares the callback for click event of the card 'id'
             return function(){
-                var index = hand.indexOf(elementName);
-                hand.splice(index, 1); //that card is removed from hand
+                 //that card is removed from hand
+                
+                if(cur!="und"){
+                    if(elementName.charAt(0)!=cur)
+                    {
+                        for(var i = 0; i<hand.length; i++){
+                            if(hand[i].charAt(0)==cur){
+                                return;
+                            }    
+                        }
+                    }
+                }
                 if(!state.turn)
                     return;
                 sendMessage('plcrd','c='+elementName, 'i='+state.id);
                 document.getElementById(id).style.display = "none"
+                var index = hand.indexOf(elementName);
+                hand.splice(index, 1);
                 return false; 
             }
         };
@@ -63,10 +75,12 @@
                         document.getElementById("t2").style.display = "none";
                         document.getElementById("t3").style.display = "none";
                         document.getElementById("t4").style.display = "none";
+                        cur=gm.card.charAt(0);
                     }
                     
                     if(gm.num==4){
-                        document.getElementById('mes').innerHTML=gm.mes 
+                        document.getElementById('mes').innerHTML=gm.mes; 
+                        cur="und";
                     }
                     
                     tsrc = "t"+(((gm.now+6-state.id)%4)+1);
@@ -206,7 +220,7 @@
         </a>
     </div> 
     
-    <div id="trumps" class="span12 text-center well" style="Display:None">
+    <div id="trumps" class="text-center well" style="Display:None">
         <input class="btn" type="submit" onclick="sendMessage('/tru','t=s')" value=spades>
         <input class="btn" type="submit" onclick="sendMessage('/tru','t=c')" value=clubs>
         <input class="btn" type="submit" onclick="sendMessage('/tru','t=h')" value=hearts>
