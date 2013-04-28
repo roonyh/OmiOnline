@@ -1,4 +1,4 @@
-application: omionline
+application: srilankanomiv1
 version: 1
 runtime: python27
 api_version: 1
@@ -12,15 +12,13 @@ handlers:
 - url: /images
   static_dir: images
 
-- url: /css/(.*\.css)
+- url: /css/
   mime_type: text/css
   static_dir: static/css/
-  upload: static/css/(.*\.css)
 
-- url: /js/(.*\.js)
+- url: /js/
   mime_type: text/javascript
   static_dir: static/js/
-  upload: static/js/(.*\.js)
       
 - url: .*
   script: omionline.app
@@ -28,3 +26,6 @@ handlers:
 libraries:
 - name: webapp2
   version: "2.5.2"
+  
+inbound_services:
+- channel_presence

@@ -9,20 +9,32 @@
         <script src="js/jquery-1.9.1.min.js"></script>
         <script src="js/bootstrap.min.js"></script>
         <div class="hero-unit">
-            <h1>Hello...!</h1>
-            <p>Our beloved card game has gone online</p>
+            <div class="row-fluid">
+              <div class="span4 text-center">
+                <h1>Hi!</h1>
+                <h3>Thank you for checking out!</h3>
+              </div>  
+              <div class="span8 text-center">
+                <h3>Please Read me!<h3>
+                <h6>When you start playing, please don't refresh browser page.<h6>
+                <h6>Updates are automatically loaded to your game page.<h6>
+                <h6>Please send your feedback to omionlinesl@gmail.com.<h6>
+                <h6>Thank you!<h6>
+              </div>
+            </div>
         </div>
-        <div class="row">
-            <div class="span6 text-center">
+        <div class="row-fluid">
+            <div class="span4 text-center">
                 <p class="lead muted">Create a game.<br>
-                Ask your buddies to join it.</p>
+                Ask 3 of your buddies to join it.</p>
                 <form action='/create' method="post">
+                <p class="muted">Nick Name: </p><input id="nick" type="text" name="nickname" value="Mickey"><br>
                 <input type="submit" value="Create" class="btn btn-primary btn-large">
                 </form>
-                <p class="muted">Actually anyone can join.</p>
             </div>  
-            <div id='initial' class="span6 text-center">
-                <p class="lead muted">You can join following games created by others</p>
+            <div id='initial' class="span8 text-center">
+                <p class="lead muted">You can join following games created by others.</p>
+                <p class="lead muted">Join a game that has less than 4 players.</p>
                 {% for creator,url in game_urls %}
                     <form action={{url}} method="post">
                         <div><input type="submit" value={{creator}} class="btn btn-primary"></div>
@@ -30,7 +42,7 @@
                 {% endfor %}
             </div>
         </div> 
-    <div class="footer">    
+    <div class="footer well">    
         <a href="{{ url }}">Logout</a>
     </div> 
        

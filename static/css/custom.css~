@@ -22,6 +22,30 @@
     left:54%
 }
 
+#ptag1{
+    position: absolute;
+    top:5.4%;
+    left:45%
+}
+
+#ptag2{
+    position: absolute;
+    top:28.3%;
+    left:38%
+}
+
+#ptag3{
+    position: absolute;
+    top:85%;
+    left:53.1%
+}
+
+#ptag4{
+    position: absolute;
+    top:62.2%;
+    left:60.1%
+}
+
 #table{
     position:relative;
     display:block;
@@ -43,12 +67,36 @@
 
 #score{
     position: absolute;
-    top:53%;
-    left:47%
+    top:19%;
+    left:85%
 }
 
 #trumpinfo{
     position: absolute;
     top:53%;
-    left:47%
+    left:90%
+}
+
+#youscore{
+    position: absolute;
+    top:19%;
+    left:60%
+}
+
+#opscore{
+    position: absolute;
+    top:47%;
+    left:67%
+}
+
+#mes{
+    position: absolute;
+    top:29%;
+    left:2%
+}
+
+#homelink{
+    position: absolute;
+    top:10%;
+    left:90%
 }

@@ -1,4 +1,4 @@
-application: omionline
+application: srilankanomiv1
 version: 1
 runtime: python27
 api_version: 1
@@ -26,3 +26,6 @@ handlers:
 libraries:
 - name: webapp2
   version: "2.5.2"
+  
+inbound_services:
+- channel_presence
