@@ -1,4 +1,4 @@
-def fun(table,tru,handwinner):    
+def findWinner(table,tru,handwinner):    
     tot = 0
     wincard = 0
     i = -1
